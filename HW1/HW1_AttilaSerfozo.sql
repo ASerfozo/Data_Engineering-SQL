@@ -29,20 +29,17 @@ IGNORE 1 LINES
 DROP TABLE IF EXISTS customers;
 CREATE TABLE customers
 (customer_id INTEGER NOT NULL, 
-customer_city VARCHAR (255),
-customer_state_province VARCHAR (255),
-customer_postal_code INTEGER NOT NULL,
-customer_country VARCHAR (255),
+customer_city VARCHAR (50),
+customer_state_province VARCHAR (50),
+customer_country VARCHAR (50),
 birthdate DATE NOT NULL,
 marital_status VARCHAR (1),
-yearly_income VARCHAR (255),
+yearly_income VARCHAR (15),
 gender VARCHAR (1),
 num_children_at_home INTEGER NOT NULL,
-education VARCHAR (255),
+education VARCHAR (50),
 acct_open_date DATE NOT NULL,
-member_card VARCHAR (255),
-occupation VARCHAR (255),
-homeowner VARCHAR (1),
+member_card VARCHAR (50),
 PRIMARY KEY(customer_id));
 
 -- Load CSV data into customers table
@@ -51,22 +48,22 @@ INTO TABLE customers
 FIELDS TERMINATED BY ',' 
 LINES TERMINATED BY '\n' 
 IGNORE 1 LINES 
-(customer_id, customer_city, customer_state_province, customer_postal_code, customer_country, birthdate, marital_status, 
-yearly_income, gender, num_children_at_home, education, acct_open_date, member_card, occupation, homeowner);
+(customer_id, customer_city, customer_state_province, customer_country, birthdate, marital_status, 
+yearly_income, gender, num_children_at_home, education, acct_open_date, member_card);
 
 -- --------------------------
 -- Create products table
 DROP TABLE IF EXISTS products;
 CREATE TABLE products
 (product_id INTEGER NOT NULL, 
-product_brand VARCHAR (255),
-product_name VARCHAR (255),
-product_sku BIGINT NOT NULL,
-product_retail_price INTEGER NOT NULL,
-product_cost INTEGER NOT NULL,
-product_weight INTEGER NOT NULL,
-recyclable VARCHAR (1),
-low_fat VARCHAR (1),
+product_brand VARCHAR (50),
+product_name VARCHAR (50),
+product_sku VARCHAR (11),
+product_retail_price DECIMAL (10,2),
+product_cost DECIMAL (10,2),
+product_weight DECIMAL (10,2),
+recyclable VARCHAR (3),
+low_fat VARCHAR (3),
 PRIMARY KEY(product_id));
 
 -- Load CSV data into products table
@@ -83,13 +80,13 @@ DROP TABLE IF EXISTS stores;
 CREATE TABLE stores
 (store_id INTEGER NOT NULL, 
 region_id INTEGER NOT NULL,
-store_type VARCHAR (255),
-store_name VARCHAR (255),
-store_street_address VARCHAR (255),
-store_city VARCHAR (255),
-store_state VARCHAR (255),
-store_country VARCHAR (255),
-store_phone VARCHAR (255),
+store_type VARCHAR (50),
+store_name VARCHAR (50),
+store_street_address VARCHAR (50),
+store_city VARCHAR (50),
+store_state VARCHAR (50),
+store_country VARCHAR (50),
+store_phone VARCHAR (50),
 first_opened_date DATE NOT NULL,
 last_remodel_date DATE NOT NULL,
 total_sqft INTEGER NOT NULL,
@@ -110,8 +107,8 @@ store_country, store_phone, first_opened_date, last_remodel_date, total_sqft, gr
 DROP TABLE IF EXISTS region;
 CREATE TABLE region
 (region_id INTEGER NOT NULL,
-sales_district VARCHAR (255),
-sales_region VARCHAR (255),
+sales_district VARCHAR (50),
+sales_region VARCHAR (50),
 PRIMARY KEY(region_id));
 
 -- Load CSV data into region table
