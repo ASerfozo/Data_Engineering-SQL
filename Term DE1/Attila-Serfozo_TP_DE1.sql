@@ -150,16 +150,26 @@ Customer Analytics maybefor Marketing purposes
 - Compare AVG spending of customers born before 1960 and after 1960 (40 years old) .
 - Create a category variable based on their gender and children (Women, Parent_Mom, Parent_Father, Men) to see the composition of customers.
 
-For the tasks further I would like to choose the:
+For further tasks I would like to choose the:
 - Profit per stores sqft,
-- Compare number of customers and quality of store (last refurbished) to see a possible connection,
-to create an Analytics layer and Data mart to answere these questions.
+- Compare number of customers and quality of store (last refurbished),
+to create an Analytics layer, ETL and Data mart to answere the next questions.
 */    
 
 -- --------------------------------
 -- ANALYTICAL LAYER
 -- --------------------------------
-
+/* 
+The analytical layer will be one big data table joint through the following variables:
+	transactions with stores through store_id
+	transactions with products through product_id
+	transactions with customers through customer_id
+Selected the required fields:
+	Product price and cost, 
+	Date and quantity of transactions, 
+	customer id-s, 
+	store details like city, name, type, size, remodel date 
+*/
 DROP PROCEDURE IF EXISTS ProductSales;
 
 DELIMITER //
@@ -188,9 +198,7 @@ BEGIN
 	INNER JOIN
 		products USING (product_id)
 	INNER JOIN
-		customers USING (customer_id)
-	INNER JOIN
-		region USING (region_id);
+		customers USING (customer_id);
 END //
 DELIMITER ;
 
@@ -200,7 +208,12 @@ CALL ProductSales();
 -- --------------------------------
 -- ETL PIPELINE
 -- --------------------------------
-
+/*
+In the ETL pipeline we will have a messages table, which will log the date of new transactions 
+added to the transactions table.
+In case of an insertion to transactions table the ETL will trigger the insertion of the new transaction
+into the analytical layer as well.
+*/
 -- create log table
 CREATE TABLE IF NOT EXISTS messages (message varchar(100) NOT NULL);
 -- empty log table
@@ -264,8 +277,12 @@ SELECT COUNT(*) FROM product_sales;
 -- --------------------------------
 -- DATA MART
 -- --------------------------------
-
--- Create the view for the Profit per SQFT
+/*
+Create the view for the Profit per SQFT data mart
+To create the data mart we need to calculate the required measures like Revenue, Profit and Profit per sqft 
+grouped by stores, in addition we will have the store properties to be able to identify them easier.
+The viwew is in descendant order by Profit per sqft to show the order of results.
+*/
 DROP VIEW IF EXISTS Profit_per_sqft;
 
 CREATE VIEW Profit_per_sqft AS
@@ -284,7 +301,12 @@ FROM product_sales
 SELECT * FROM Profit_per_sqft;
 -- Small-size and middle-size groceries are well below supermarket and deluxe supermarket profitability
 
--- Create the view for the Customers and Store quality
+/*
+Create the view for the Customers and Store quality data mart
+To create this view we need to calculate the number of customers going to a shop, for this I will use DISTINCT 
+to add a customer only once to a shop. In addition I added the store properties we need to identify the shops and
+the date of renewal. The View in the end is grouped by the stores and ordered descendant by the number of customers.
+*/
 DROP VIEW IF EXISTS Customers_and_Store_Quality;
 
 CREATE VIEW Customers_and_Store_Quality AS
